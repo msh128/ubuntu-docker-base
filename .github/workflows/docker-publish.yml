@@ -64,8 +64,8 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         env:
           TAGS: |
-            - ghcr.io/msh128/ubuntu-docker-base:xubuntu-core
-            - ghcr.io/msh128/ubuntu-docker-base:kde-plasma
-            - ghcr.io/msh128/ubuntu-docker-base:cinnamon
+            ghcr.io/msh128/ubuntu-docker-base:xubuntu-core
+            ghcr.io/msh128/ubuntu-docker-base:kde-plasma
+            ghcr.io/msh128/ubuntu-docker-base:cinnamon
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
