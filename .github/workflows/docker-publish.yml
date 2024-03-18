@@ -1,6 +1,9 @@
 name: "Build and publish to ghcr.io"
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - 'kde-plasma'
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
