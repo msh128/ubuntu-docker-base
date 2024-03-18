@@ -63,6 +63,9 @@ jobs:
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
         env:
-          TAGS: ${{ steps.meta.outputs.tags }}
+          TAGS: |
+            - ghcr.io/msh128/ubuntu-docker-base:xubuntu-core
+            - ghcr.io/msh128/ubuntu-docker-base:kde-plasma
+            - ghcr.io/msh128/ubuntu-docker-base:cinnamon
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
