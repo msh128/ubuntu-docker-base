@@ -37,27 +37,27 @@ jobs:
         id: build-and-push-1
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: "{{defaultContext}}:xubuntu-core"
+          context: xubuntu-core
           push: true
-          tags: xubuntu-core
+          tags: ghcr.io/msh128/ubuntu-docker-base:xubuntu-core
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push Docker image for KDE Plasma variant
         id: build-and-push-2
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: "{{defaultContext}}:kde-plasma"
+          context: kde-plasma
           push: true
-          tags: kde-plasma
+          tags: ghcr.io/msh128/ubuntu-docker-base:kde-plasma
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push Docker image for Cinnamon variant
         id: build-and-push-3
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: "{{defaultContext}}:cinnamon"
+          context: cinnamon
           push: true
-          tags: cinnamon
+          tags: ghcr.io/msh128/ubuntu-docker-base:cinnamon
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Sign the published Docker image
