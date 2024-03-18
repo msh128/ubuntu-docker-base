@@ -1,4 +1,4 @@
-name: "Build and publish to ghcr.io, Xubuntu Core variant"
+name: "Build the Xubuntu Core variant"
 on:
   workflow_dispatch:
 env:
