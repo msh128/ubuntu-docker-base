@@ -1,6 +1,15 @@
 name: "Build and publish to ghcr.io"
 on:
   workflow_dispatch:
+    inputs:
+      variant:
+        type: choice
+        description: Select variant
+        options:
+        - xubuntu-core
+        - kde-plasma
+        - cinnamon
+        - mate-core
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -32,37 +41,16 @@ jobs:
         id: meta
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Build and push Docker image for Xubuntu Core variant
-        id: build-and-push-xubuntu-core
+          images: msh128/ubuntu-docker-base
+      - name: Build and push Docker image
+        id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: xubuntu-core
+          context: ${{ inputs.variant }}
           push: true
-          tags: ghcr.io/msh128/ubuntu-docker-base:xubuntu-core
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: Build and push Docker image for KDE Plasma variant
-        id: build-and-push-kde-plasma
-        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
-        with:
-          context: kde-plasma
-          push: true
-          tags: ghcr.io/msh128/ubuntu-docker-base:kde-plasma
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: Build and push Docker image for Cinnamon variant
-        id: build-and-push-cinnamon
-        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
-        with:
-          context: cinnamon
-          push: true
-          tags: ghcr.io/msh128/ubuntu-docker-base:cinnamon
+          tags: ghcr.io/msh128/ubuntu-docker-base:${{ inputs.variant }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
-        run: |
-          cosign sign --yes ghcr.io/msh128/ubuntu-docker-base:xubuntu-core@${{ steps.build-and-push-xubuntu-core.outputs.digest }}
-          cosign sign --yes ghcr.io/msh128/ubuntu-docker-base:kde-plasma@${{ steps.build-and-push-kde-plasma.outputs.digest }}
-          cosign sign --yes ghcr.io/msh128/ubuntu-docker-base:cinnamon@${{ steps.build-and-push-cinnamon.outputs.digest }}
+        run: cosign sign --yes ghcr.io/msh128/ubuntu-docker-base:${{ inputs.variant }}@${{ steps.build-and-push.outputs.digest }}
