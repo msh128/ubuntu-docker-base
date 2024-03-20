@@ -43,7 +43,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: Modify Dockerfile to match requested variant
         run: |
-          export eval = ${{ inputs.variant }}
+          eval=${{ inputs.variant }}
           case $eval in
             xubuntu-core)
               export replace_string = "xubuntu-core\^";;
