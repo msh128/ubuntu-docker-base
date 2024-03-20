@@ -43,11 +43,18 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: Modify Dockerfile to match requested variant
         run: |
-          [ ${{ inputs.variant }} == xubuntu-core ] && sed -i 's/placeholder_for_desktop_package/xubuntu-core\^/g' Dockerfile
-          [ ${{ inputs.variant }} == kde-plasma-desktop ] && sed -i 's/placeholder_for_desktop_package/kde-plasma-desktop/g' Dockerfile
-          [ ${{ inputs.variant }} == cinnamon ] && sed -i 's/placeholder_for_desktop_package/cinnamon/g' Dockerfile
-          [ ${{ inputs.variant }} == ubuntu-mate-core ] && sed -i 's/placeholder_for_desktop_package/ubuntu-mate-core\^/g' Dockerfile
-          [ ${{ inputs.variant }} == lubuntu-desktop ] && sed -i 's/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g' Dockerfile
+          # [ ${{ inputs.variant }} == xubuntu-core ] && sed -i 's/placeholder_for_desktop_package/xubuntu-core\^/g' Dockerfile
+          # [ ${{ inputs.variant }} == kde-plasma-desktop ] && sed -i 's/placeholder_for_desktop_package/kde-plasma-desktop/g' Dockerfile
+          # [ ${{ inputs.variant }} == cinnamon ] && sed -i 's/placeholder_for_desktop_package/cinnamon/g' Dockerfile
+          # [ ${{ inputs.variant }} == ubuntu-mate-core ] && sed -i 's/placeholder_for_desktop_package/ubuntu-mate-core\^/g' Dockerfile
+          # [ ${{ inputs.variant }} == lubuntu-desktop ] && sed -i 's/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g' Dockerfile
+          case ${{ inputs.variant }} in
+            xubuntu-core) sed -i 's/placeholder_for_desktop_package/xubuntu-core\^/g' Dockerfile;;
+            kde-plasma-desktop) sed -i 's/placeholder_for_desktop_package/kde-plasma-desktop/g' Dockerfile;;
+            cinnamon) sed -i 's/placeholder_for_desktop_package/cinnamon/g' Dockerfile;;
+            ubuntu-mate-core) sed -i 's/placeholder_for_desktop_package/ubuntu-mate-core\^/g' Dockerfile;;
+            lubuntu-desktop) sed -i 's/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g' Dockerfile;;
+          esac
           cat Dockerfile | grep 'DEBIAN_FRONTEND=noninteractive'
       - name: Build and push Docker image
         id: build-and-push
