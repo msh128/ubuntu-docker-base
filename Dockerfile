@@ -2,12 +2,12 @@ FROM ubuntu:latest
 
 ENV TZ=Asia/Jakarta
 
-RUN DEBIAN_FRONTEND=noninteractive (apt -qq update \
-    && apt -qq install -y \
+RUN (apt -qq update \
+    && DEBIAN_FRONTEND=noninteractive apt -qq install -y \
       aria2 curl ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
       parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo sqlite3 tigervnc-standalone-server tigervnc-xorg-extension \
       tmux tzdata unzip xfce4-terminal xserver-xorg-video-dummy dbus-x11 \
-    && apt -qq install -y placeholder_for_desktop_package \
+    && DEBIAN_FRONTEND=noninteractive apt -qq install -y placeholder_for_desktop_package \
     && apt -qq full-upgrade -y \
     && for a in autoremove purge clean; do apt -qq $a; done) > /dev/null 2>&1 \
     && rm -rf /var/lib/apt/lists/*
