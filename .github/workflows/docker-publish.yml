@@ -47,7 +47,7 @@ jobs:
             xubuntu-core) sed -i 's/placeholder_for_desktop_package/xubuntu-core\^/g' Dockerfile;;
             kde-plasma-desktop) sed -i 's/placeholder_for_desktop_package/kde-plasma-desktop/g' Dockerfile;;
             cinnamon) sed -i 's/placeholder_for_desktop_package/cinnamon/g' Dockerfile;;
-            ubuntu-mate-core) sed -i 's/placeholder_for_desktop_package/ubuntu-mate-core\^/g' Dockerfile;;
+            ubuntu-mate-core) sed -i 's/placeholder_for_desktop_package/ubuntu-mate-core/g' Dockerfile;;
             lubuntu-desktop) sed -i 's/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g' Dockerfile;;
           esac
       - name: Build and push Docker image
