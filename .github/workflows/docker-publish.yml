@@ -41,11 +41,31 @@ jobs:
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Modify Dockerfile to match requested variant
+        run: |
+          case ${{ inputs.variant }} in
+            xubuntu-core)
+              export replace_string = "xubuntu-core\^"
+              ;;
+            kde-plasma-desktop)
+              export replace_string = "kde-plasma-desktop"
+              ;;
+            cinnamon)
+              export replace_string = "cinnamon"
+              ;;
+            ubuntu-mate-core)
+              export replace_string = "ubuntu-mate-core\^"
+              ;;
+            lubuntu-desktop)
+              export replace_string = "--no-install-recommends lubuntu-desktop"
+              ;;
+          esac
+          sed -i "s/placeholder_for_desktop_package/${replace_string}/g" Dockerfile
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: ${{ inputs.variant }}
+          context: .
           push: true
           tags: ghcr.io/msh128/ubuntu-docker-base:${{ inputs.variant }}
           cache-from: type=gha
