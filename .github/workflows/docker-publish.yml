@@ -54,5 +54,7 @@ jobs:
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-          sudo chmod a+r /usr/share/keyrings/docker-archive-keyring.gpg
+          sudo mkdir -p /etc/apt/keyrings
+          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
+          sudo chmod a+r /etc/apt/keyrings/docker.gpg
           cosign sign --yes ghcr.io/msh128/ubuntu-docker-base:${{ inputs.variant }}@${{ steps.build-and-push.outputs.digest }}
