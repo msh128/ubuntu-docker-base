@@ -1,0 +1,19 @@
+name: "Build and publish all variant"
+on:
+  workflow_dispatch:
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          for a in xubuntu-core kde-plasma cinnamon mate-core lubuntu-desktop
+            do
+              gh workflow run docker-publish.yml -f variant=$a
+          done
