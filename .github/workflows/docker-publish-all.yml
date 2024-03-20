@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          for a in xubuntu-core kde-plasma cinnamon mate-core lubuntu-desktop
+          for a in xubuntu-core kde-plasma-desktop cinnamon ubuntu-mate-core lubuntu-desktop
             do
               gh workflow run docker-publish.yml -f variant=$a
           done
