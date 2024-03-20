@@ -41,7 +41,7 @@ jobs:
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Modify Dockerfile to match requested variant
+      - name: Modify Dockerfile
         run: |
           case ${{ inputs.variant }} in
             xubuntu-core) sed -i 's/placeholder_for_desktop_package/xubuntu-core\^/g' Dockerfile;;
@@ -50,7 +50,7 @@ jobs:
             ubuntu-mate-core) sed -i 's/placeholder_for_desktop_package/ubuntu-mate-core/g' Dockerfile;;
             lubuntu-desktop) sed -i 's/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g' Dockerfile;;
           esac
-      - name: Build and push Docker image for ${{ inputs.variant }} variant
+      - name: Build and push ${{ inputs.variant }}
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
