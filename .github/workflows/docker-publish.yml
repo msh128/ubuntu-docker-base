@@ -46,19 +46,17 @@ jobs:
           eval=${{ inputs.variant }}
           case $eval in
             xubuntu-core)
-              export replace_string="xubuntu-core\^";;
+              sed -i "s/placeholder_for_desktop_package/xubuntu-core\^/g" Dockerfile;;
             kde-plasma-desktop)
-              export replace_string="kde-plasma-desktop";;
+              sed -i "s/placeholder_for_desktop_package/kde-plasma-desktop/g" Dockerfile;;
             cinnamon)
-              export replace_string="cinnamon";;
+              sed -i "s/placeholder_for_desktop_package/cinnamon/g" Dockerfile;;
             ubuntu-mate-core)
-              export replace_string="ubuntu-mate-core\^";;
+              sed -i "s/placeholder_for_desktop_package/ubuntu-mate-core\^/g" Dockerfile;;
             lubuntu-desktop)
-              export replace_string="--no-install-recommends lubuntu-desktop";;
+              sed -i "s/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g" Dockerfile;;
           esac
-          echo $replace_string
-          echo ${replace_string}
-          sed -i "s/placeholder_for_desktop_package/$replace_string/g" Dockerfile
+          cat Dockerfile | grep 'DEBIAN_FRONTEND=noninteractive'
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
