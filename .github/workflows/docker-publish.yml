@@ -43,11 +43,6 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: Modify Dockerfile to match requested variant
         run: |
-          # [ ${{ inputs.variant }} == xubuntu-core ] && sed -i 's/placeholder_for_desktop_package/xubuntu-core\^/g' Dockerfile
-          # [ ${{ inputs.variant }} == kde-plasma-desktop ] && sed -i 's/placeholder_for_desktop_package/kde-plasma-desktop/g' Dockerfile
-          # [ ${{ inputs.variant }} == cinnamon ] && sed -i 's/placeholder_for_desktop_package/cinnamon/g' Dockerfile
-          # [ ${{ inputs.variant }} == ubuntu-mate-core ] && sed -i 's/placeholder_for_desktop_package/ubuntu-mate-core\^/g' Dockerfile
-          # [ ${{ inputs.variant }} == lubuntu-desktop ] && sed -i 's/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g' Dockerfile
           case ${{ inputs.variant }} in
             xubuntu-core) sed -i 's/placeholder_for_desktop_package/xubuntu-core\^/g' Dockerfile;;
             kde-plasma-desktop) sed -i 's/placeholder_for_desktop_package/kde-plasma-desktop/g' Dockerfile;;
@@ -55,7 +50,6 @@ jobs:
             ubuntu-mate-core) sed -i 's/placeholder_for_desktop_package/ubuntu-mate-core\^/g' Dockerfile;;
             lubuntu-desktop) sed -i 's/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g' Dockerfile;;
           esac
-          cat Dockerfile | grep 'DEBIAN_FRONTEND=noninteractive'
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
@@ -68,9 +62,6 @@ jobs:
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
         env:
-          # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
           TAGS: ${{ steps.meta.outputs.tags }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
-        # This step uses the identity token to provision an ephemeral certificate
-        # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
