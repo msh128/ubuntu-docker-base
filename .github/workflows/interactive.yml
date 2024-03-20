@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NTFY: ${{ secrets.NTFY }}
   AUTH_USERNAME: ${{ secrets.AUTH_USERNAME }}
   AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 jobs:
@@ -14,17 +15,18 @@ jobs:
       - run: (sudo apt -qq update && sudo apt -qq upgrade -y) > /dev/null 2>&1
       - run: ssh-keygen -t ed25519 -q -f "$HOME/.ssh/id_ed25519" -N "" && chmod 600 "$HOME/.ssh/id_ed25519"
       - run: curl -sL -o /usr/local/bin/ttyd $(curl -s 'https://api.github.com/repos/tsl0922/ttyd/releases/latest' | jq -r '.assets[] | select(.name|contains("x86_64")).browser_download_url') && sudo chmod a+x /usr/local/bin/ttyd
-      - run: /usr/local/bin/ttyd -p 7681 -c ${AUTH_USERNAME}:${AUTH_PASSWORD} -W -t titleFixed="ttyd - Android emulator" -t fontSize=13 -t fontFamily=monospace -m 1 /bin/bash -lc 'source ~/.bashrc; /usr/bin/tmux a || /usr/bin/tmux' &
+      - run: /usr/local/bin/ttyd -p 7681 -c ${AUTH_USERNAME}:${AUTH_PASSWORD} -W -t titleFixed="ttyd - Android emulator" -t fontSize=13 -t fontFamily=monospace -m 1 /bin/bash -lc 'source ~/.bashrc; /usr/bin/tmux a || /usr/bin/tmux' > /dev/null 2>&1 &
       - run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 -T srv.us -R 1:127.0.0.1:7681 -R 2:127.0.0.1:6080 -R 3:127.0.0.1:5901 > /tmp/srv.us.addr 2> /dev/null &
-      - run: SSH_J=$(curl -s 'https://www.uuidgenerator.net/api/guid' | cut -f1 -d-)
-      - run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 -T -N ${SSH_J}@ssh-j.com -R ${SSH_J}:7681:127.0.0.1:7681 > /dev/null 2>&1 &
+      - run: |
+          SSH_J=$(curl -s 'https://www.uuidgenerator.net/api/guid' | cut -f1 -d-)
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 -T -N ${SSH_J}@ssh-j.com -R ${SSH_J}:7681:127.0.0.1:7681 > /dev/null 2>&1 &
       - run: while [ $(cat /tmp/srv.us.addr | wc -l) == 0 ]; do sleep 3; done
       - run: |
           curl -s -d "$(echo Interactive session for ${{ github.repository }}; \
-          echo ""; \
+          echo ''; \
           echo Connect via srv.us:; \
           cat /tmp/srv.us.addr; \
-          echo ""; \
+          echo ''; \
           echo Connect via ssh-j.com:; \
           echo 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 -T -N '${SSH_J}'@ssh-j.com -L 127.0.4.2:7681:'${SSH_J}':7681)'" ntfy.sh/$NTFY > /dev/null 2>&1
       - run: |
