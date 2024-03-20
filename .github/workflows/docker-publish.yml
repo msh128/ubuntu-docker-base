@@ -60,6 +60,8 @@ jobs:
               export replace_string = "--no-install-recommends lubuntu-desktop"
               ;;
           esac
+          echo $replace_string
+          echo ${replace_string}
           sed -i "s/placeholder_for_desktop_package/$replace_string/g" Dockerfile
       - name: Build and push Docker image
         id: build-and-push
