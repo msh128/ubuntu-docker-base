@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 ENV TZ=Asia/Jakarta
 
-RUN (apt -qq update && DEBIAN_FRONTEND=noninteractive apt -yqq install aria2 curl ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo sqlite3 tigervnc-standalone-server tigervnc-xorg-extension tmux tzdata unzip xfce4-terminal xserver-xorg-video-dummy dbus-x11 && sudo apt -yqq install placeholder_for_desktop_package && apt -yqq full-upgrade && for a in autoremove purge clean; do apt -yqq $a; done) > /dev/null 2>&1 && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+RUN (apt -qq update && DEBIAN_FRONTEND=noninteractive apt -yqq install aria2 curl ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo sqlite3 tigervnc-standalone-server tigervnc-xorg-extension tmux tzdata unzip xfce4-terminal xserver-xorg-video-dummy dbus-x11 && sudo apt -yqq install placeholder_for_desktop_package && apt -yqq full-upgrade && for a in autoremove purge clean; do apt -qq $a; done) > /dev/null 2>&1 && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 RUN sudo pip install yt-dlp udocker > /dev/null 2>&1
 RUN (curl -s https://rclone.org/install.sh | bash) > /dev/null 2>&1
 RUN curl -sL -o /usr/local/bin/ttyd $(curl -s 'https://api.github.com/repos/tsl0922/ttyd/releases/latest' | jq -r '.assets[] | select(.name|contains("x86_64")).browser_download_url')
