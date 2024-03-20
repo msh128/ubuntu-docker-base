@@ -43,11 +43,11 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: Modify Dockerfile to match requested variant
         run: |
-          [ "${{ inputs.variant }}" == "xubuntu-core" ] && sed -i "s/placeholder_for_desktop_package/xubuntu-core\^/g" Dockerfile
-          [ "${{ inputs.variant }}" == "kde-plasma-desktop" ] && sed -i "s/placeholder_for_desktop_package/kde-plasma-desktop/g" Dockerfile
-          [ "${{ inputs.variant }}" == "cinnamon" ] && sed -i "s/placeholder_for_desktop_package/cinnamon/g" Dockerfile
-          [ "${{ inputs.variant }}" == "ubuntu-mate-core" ] && sed -i "s/placeholder_for_desktop_package/ubuntu-mate-core\^/g" Dockerfile
-          [ "${{ inputs.variant }}" == "lubuntu-desktop" ] && sed -i "s/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g" Dockerfile
+          [ ${{ inputs.variant }} == xubuntu-core ] && sed -i 's/placeholder_for_desktop_package/xubuntu-core\^/g' Dockerfile
+          [ ${{ inputs.variant }} == kde-plasma-desktop ] && sed -i 's/placeholder_for_desktop_package/kde-plasma-desktop/g' Dockerfile
+          [ ${{ inputs.variant }} == cinnamon ] && sed -i 's/placeholder_for_desktop_package/cinnamon/g' Dockerfile
+          [ ${{ inputs.variant }} == ubuntu-mate-core ] && sed -i 's/placeholder_for_desktop_package/ubuntu-mate-core\^/g' Dockerfile
+          [ ${{ inputs.variant }} == lubuntu-desktop ] && sed -i 's/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g' Dockerfile
           cat Dockerfile | grep 'DEBIAN_FRONTEND=noninteractive'
       - name: Build and push Docker image
         id: build-and-push
