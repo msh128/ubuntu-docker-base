@@ -43,22 +43,18 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: Modify Dockerfile to match requested variant
         run: |
-          case ${{ inputs.variant }} in
+          $eval = ${{ inputs.variant }}
+          case $eval in
             xubuntu-core)
-              export replace_string = "xubuntu-core\^"
-              ;;
+              export replace_string = "xubuntu-core\^";;
             kde-plasma-desktop)
-              export replace_string = "kde-plasma-desktop"
-              ;;
+              export replace_string = "kde-plasma-desktop";;
             cinnamon)
-              export replace_string = "cinnamon"
-              ;;
+              export replace_string = "cinnamon";;
             ubuntu-mate-core)
-              export replace_string = "ubuntu-mate-core\^"
-              ;;
+              export replace_string = "ubuntu-mate-core\^";;
             lubuntu-desktop)
-              export replace_string = "--no-install-recommends lubuntu-desktop"
-              ;;
+              export replace_string = "--no-install-recommends lubuntu-desktop";;
           esac
           echo $replace_string
           echo ${replace_string}
