@@ -42,6 +42,7 @@ jobs:
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: type=raw,value=${{ inputs.variant }}
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
@@ -54,4 +55,4 @@ jobs:
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-          sudo cosign sign --yes ghcr.io/msh128/ubuntu-docker-base:${{ inputs.variant }}@${{ steps.build-and-push.outputs.digest }}
+          cosign sign --yes ghcr.io/msh128/ubuntu-docker-base:${{ inputs.variant }}@${{ steps.build-and-push.outputs.digest }}
