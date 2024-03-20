@@ -10,7 +10,7 @@ on:
         - kde-plasma
         - cinnamon
         - mate-core
-        - lubuntu-core
+        - lubuntu-desktop
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
