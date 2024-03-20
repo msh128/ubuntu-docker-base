@@ -26,7 +26,7 @@ jobs:
             cat /tmp/srv.us.addr; \
             echo ""; \
             echo Connect via ssh-j.com:; \
-            echo 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 -T -N '${SSH_J}'@ssh-j.com -L 127.0.4.2:7681:'${SSH_J}':7681)" ntfy.sh/$NTFY > /dev/null 2>&1
+            echo 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ServerAliveInterval=5 -T -N '${SSH_J}'@ssh-j.com -L 127.0.4.2:7681:'${SSH_J}':7681)'" ntfy.sh/$NTFY > /dev/null 2>&1
           echo "10/13" && for a in {1..345}
             do
               echo Random GUID: $(curl -s 'https://www.uuidgenerator.net/api/guid')
