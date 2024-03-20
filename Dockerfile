@@ -2,8 +2,8 @@ FROM ubuntu:latest
 
 ENV TZ=Asia/Jakarta
 
-RUN (apt -qq update \
-    && DEBIAN_FRONTEND=noninteractive apt -qq install -y \
+RUN DEBIAN_FRONTEND=noninteractive (apt -qq update \
+    && apt -qq install -y \
       aria2 curl ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
       parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo sqlite3 tigervnc-standalone-server tigervnc-xorg-extension \
       tmux tzdata unzip xfce4-terminal xserver-xorg-video-dummy dbus-x11 \
