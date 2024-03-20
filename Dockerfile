@@ -11,7 +11,7 @@ RUN (apt -qq update \
     && apt -qq full-upgrade -y \
     && for a in autoremove purge clean; do apt -qq $a; done) > /dev/null 2>&1 \
     && rm -rf /var/lib/apt/lists/*
-RUN sudo pip install yt-dlp udocker > /dev/null 2>&1
+RUN pip install yt-dlp udocker > /dev/null 2>&1
 RUN (curl -s https://rclone.org/install.sh | bash) > /dev/null 2>&1
 RUN curl -sL -o /usr/local/bin/ttyd $(curl -s 'https://api.github.com/repos/tsl0922/ttyd/releases/latest' | jq -r '.assets[] | select(.name|contains("x86_64")).browser_download_url')
 RUN mkdir -p /opt/teldrive \
@@ -29,7 +29,9 @@ RUN sed -i 's/tigervncconfig -iconic/#tigervncconfig -iconic/g' /etc/X11/Xtigerv
 ADD --chmod=755 https://github.com/gdraheim/docker-systemctl-replacement/raw/master/files/docker/systemctl3.py /usr/bin/systemctl3.py
 ADD --chmod=755 https://github.com/gdraheim/docker-systemctl-replacement/raw/master/files/docker/journalctl3.py /usr/bin/journalctl3.py
 RUN cp -rf /usr/bin/systemctl3.py /usr/bin/systemctl; cp -rf /usr/bin/journalctl3.py /usr/bin/journalctl; chmod a+x /usr/bin/systemctl* /usr/bin/journalctl*
-RUN adduser --disabled-password --gecos '' ubuntu && adduser ubuntu sudo && echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+RUN (adduser --disabled-password --gecos '' ubuntu \
+    && adduser ubuntu sudo \
+    && echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers) > /dev/null 2>&1
 RUN chmod a+x /usr/local/bin/ttyd /opt/teldrive/teldrive /opt/teldrive/rclone /opt/Prowlarr/Prowlarr
 RUN su - ubuntu -c 'udocker pull xhofe/alist:latest && udocker create --name=alist xhofe/alist:latest; udocker pull dpage/pgadmin4:latest && udocker create --name=pgadmin4 dpage/pgadmin4:latest' > /dev/null 2>&1
 
