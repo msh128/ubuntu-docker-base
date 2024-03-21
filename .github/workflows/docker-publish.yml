@@ -11,6 +11,7 @@ on:
         - cinnamon
         - ubuntu-mate-core
         - lubuntu-desktop
+        - ubuntu-desktop-minimal
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
