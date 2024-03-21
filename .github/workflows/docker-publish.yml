@@ -11,7 +11,6 @@ on:
         - cinnamon
         - ubuntu-mate-core
         - lubuntu-desktop
-        - ubuntu-desktop-minimal
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -50,7 +49,6 @@ jobs:
             cinnamon) sed -i 's/placeholder_for_desktop_package/cinnamon/g' Dockerfile;;
             ubuntu-mate-core) sed -i 's/placeholder_for_desktop_package/ubuntu-mate-core\^/g' Dockerfile;;
             lubuntu-desktop) sed -i 's/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g' Dockerfile;;
-            ubuntu-desktop-minimal) sed -i 's/placeholder_for_desktop_package/ubuntu-desktop-minimal/g' Dockerfile;;
           esac
       - name: Build and push ${{ inputs.variant }}
         id: build-and-push
