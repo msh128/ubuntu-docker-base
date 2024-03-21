@@ -50,6 +50,7 @@ jobs:
             cinnamon) sed -i 's/placeholder_for_desktop_package/cinnamon/g' Dockerfile;;
             ubuntu-mate-core) sed -i 's/placeholder_for_desktop_package/ubuntu-mate-core\^/g' Dockerfile;;
             lubuntu-desktop) sed -i 's/placeholder_for_desktop_package/--no-install-recommends lubuntu-desktop/g' Dockerfile;;
+            ubuntu-desktop-minimal) sed -i 's/placeholder_for_desktop_package/ubuntu-desktop-minimal/g' Dockerfile;;
           esac
       - name: Build and push ${{ inputs.variant }}
         id: build-and-push
