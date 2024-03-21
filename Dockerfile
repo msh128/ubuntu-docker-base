@@ -4,9 +4,9 @@ ENV TZ=Asia/Jakarta
 
 RUN (apt -qq update \
     && DEBIAN_FRONTEND=noninteractive apt -qq install -y \
-      aria2 curl ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
+      aria2 curl dbus-x11 ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
       parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo sqlite3 tigervnc-standalone-server tigervnc-xorg-extension \
-      tmux tzdata unzip xfce4-terminal xserver-xorg-video-dummy dbus-x11 \
+      tmux tzdata unzip xfce4-terminal xserver-xorg-video-dummy \
     && DEBIAN_FRONTEND=noninteractive apt -qq install -y placeholder_for_desktop_package \
     && apt -qq full-upgrade -y \
     && for a in autoremove purge clean; do apt -qq $a; done) > /dev/null 2>&1 \
@@ -24,7 +24,7 @@ RUN aria2c -q -c 'https://download.mozilla.org/?product=firefox-esr-latest-ssl&o
     && tar xjf firefox-*.tar.bz2 -C /opt \
     && ln -s /opt/firefox/firefox /usr/local/bin/firefox \
     && rm firefox-*.tar.bz2 \
-    && wget https://raw.githubusercontent.com/mozilla/sumo-kb/main/install-firefox-linux/firefox.desktop -P /usr/local/share/applications
+    && wget -q https://raw.githubusercontent.com/mozilla/sumo-kb/main/install-firefox-linux/firefox.desktop -P /usr/local/share/applications
 RUN sed -i 's/tigervncconfig -iconic/#tigervncconfig -iconic/g' /etc/X11/Xtigervnc-session
 ADD --chmod=755 https://github.com/gdraheim/docker-systemctl-replacement/raw/master/files/docker/systemctl3.py /usr/bin/systemctl3.py
 ADD --chmod=755 https://github.com/gdraheim/docker-systemctl-replacement/raw/master/files/docker/journalctl3.py /usr/bin/journalctl3.py
