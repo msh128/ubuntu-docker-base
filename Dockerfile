@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
 ENV TZ=Asia/Jakarta
-ARG DESKTOP_ENV
+ARG VARIANT
 
 RUN (apt -qq update \
     && DEBIAN_FRONTEND=noninteractive apt -qq install -y \
@@ -9,10 +9,10 @@ RUN (apt -qq update \
       parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo sqlite3 tigervnc-standalone-server tigervnc-xorg-extension \
       tmux tzdata unzip xfce4-terminal xserver-xorg-video-dummy \
     && apt -qq full-upgrade -y \
-    && case ${DESKTOP_ENV} in \
-        xubuntu-core|ubuntu-mate-core) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${DESKTOP_ENV}^;; \
-        lubuntu-desktop) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${DESKTOP_ENV} --no-install-recommends;; \
-        *) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${DESKTOP_ENV};; \
+    && case ${VARIANT} in \
+        xubuntu-core|ubuntu-mate-core) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${VARIANT}^;; \
+        lubuntu-desktop) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${VARIANT} --no-install-recommends;; \
+        *) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${VARIANT};; \
       esac \
     && for a in autoremove purge clean; do apt -qq $a; done) > /dev/null 2>&1 \
     && rm -rf /var/lib/apt/lists/*
@@ -39,6 +39,6 @@ RUN (adduser --disabled-password --gecos '' ubuntu \
     && echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers) > /dev/null 2>&1
 RUN chmod a+x /usr/local/bin/ttyd /opt/teldrive/teldrive /opt/teldrive/rclone /opt/Prowlarr/Prowlarr
 RUN su - ubuntu -c 'udocker pull xhofe/alist:latest && udocker create --name=alist xhofe/alist:latest; udocker pull dpage/pgadmin4:latest && udocker create --name=pgadmin4 dpage/pgadmin4:latest' > /dev/null 2>&1
-RUN [ "${DESKTOP_ENV}" == "ubuntu-desktop-minimal" ] && DEBIAN_FRONTEND=noninteractive apt -qq install -y --reinstall systemd
+RUN [ "${VARIANT}" == "ubuntu-desktop-minimal" ] && DEBIAN_FRONTEND=noninteractive apt -qq install -y --reinstall systemd
 
 CMD ["/sbin/init"]
