@@ -58,6 +58,7 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/msh128/ubuntu-docker-base:${{ inputs.variant }}
+          build-args: VARIANT=${{ inputs.variant }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Sign the published Docker image
