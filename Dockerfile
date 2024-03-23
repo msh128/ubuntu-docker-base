@@ -13,9 +13,7 @@ RUN (apt -qq update \
         xubuntu-core|ubuntu-mate-core) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${VARIANT}^;; \
         lubuntu-desktop) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${VARIANT} --no-install-recommends;; \
         *) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${VARIANT};; \
-      esac \
-    && for a in autoremove purge clean; do apt -qq $a; done) > /dev/null 2>&1 \
-    && rm -rf /var/lib/apt/lists/*
+      esac) > /dev/null 2>&1
 RUN pip install yt-dlp udocker > /dev/null 2>&1
 RUN (curl -s https://rclone.org/install.sh | bash) > /dev/null 2>&1
 RUN curl -sL -o /usr/local/bin/ttyd $(curl -s 'https://api.github.com/repos/tsl0922/ttyd/releases/latest' | jq -r '.assets[] | select(.name|contains("x86_64")).browser_download_url')
@@ -39,9 +37,7 @@ RUN (adduser --disabled-password --gecos '' ubuntu \
     && echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers) > /dev/null 2>&1
 RUN chmod a+x /usr/local/bin/ttyd /opt/teldrive/teldrive /opt/teldrive/rclone /opt/Prowlarr/Prowlarr
 RUN su - ubuntu -c 'udocker pull xhofe/alist:latest && udocker create --name=alist xhofe/alist:latest; udocker pull dpage/pgadmin4:latest && udocker create --name=pgadmin4 dpage/pgadmin4:latest' > /dev/null 2>&1
-RUN if [ "${VARIANT}" = "ubuntu-desktop-minimal" ]; then apt -qq update \
-    && DEBIAN_FRONTEND=noninteractive apt -qq install -y --reinstall systemd \
-    && for a in autoremove purge clean; do apt -qq $a; done > /dev/null 2>&1 \
-    && rm -rf /var/lib/apt/lists/*; fi
+RUN if [ "${VARIANT}" = "ubuntu-desktop-minimal" ]; then DEBIAN_FRONTEND=noninteractive apt -qq install -y --reinstall systemd; fi
+RUN (for a in autoremove purge clean; do apt -qq $a; done && rm -rf /var/lib/apt/lists/*) > /dev/null 2>&1
 
 CMD ["/sbin/init"]
