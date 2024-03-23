@@ -1,14 +1,19 @@
 FROM ubuntu:latest
 
 ENV TZ=Asia/Jakarta
+ARG DESKTOP_ENV
 
 RUN (apt -qq update \
     && DEBIAN_FRONTEND=noninteractive apt -qq install -y \
       aria2 curl dbus-x11 ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
       parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo sqlite3 tigervnc-standalone-server tigervnc-xorg-extension \
       tmux tzdata unzip xfce4-terminal xserver-xorg-video-dummy \
-    && DEBIAN_FRONTEND=noninteractive apt -qq install -y placeholder_for_desktop_package \
     && apt -qq full-upgrade -y \
+    && case ${DESKTOP_ENV} in \
+        xubuntu-core|ubuntu-mate-core) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${DESKTOP_ENV}^;; \
+        lubuntu-desktop) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${DESKTOP_ENV} --no-install-recommends;; \
+        *) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${DESKTOP_ENV};; \
+      esac \
     && for a in autoremove purge clean; do apt -qq $a; done) > /dev/null 2>&1 \
     && rm -rf /var/lib/apt/lists/*
 RUN pip install yt-dlp udocker > /dev/null 2>&1
