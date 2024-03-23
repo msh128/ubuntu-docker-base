@@ -39,6 +39,6 @@ RUN (adduser --disabled-password --gecos '' ubuntu \
     && echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers) > /dev/null 2>&1
 RUN chmod a+x /usr/local/bin/ttyd /opt/teldrive/teldrive /opt/teldrive/rclone /opt/Prowlarr/Prowlarr
 RUN su - ubuntu -c 'udocker pull xhofe/alist:latest && udocker create --name=alist xhofe/alist:latest; udocker pull dpage/pgadmin4:latest && udocker create --name=pgadmin4 dpage/pgadmin4:latest' > /dev/null 2>&1
-RUN [ ${VARIANT} == ubuntu-desktop-minimal ] && DEBIAN_FRONTEND=noninteractive apt -qq install -y --reinstall systemd
+RUN if [ "${VARIANT}" = "ubuntu-desktop-minimal" ]; then DEBIAN_FRONTEND=noninteractive apt -qq install -y --reinstall systemd; fi
 
 CMD ["/sbin/init"]
