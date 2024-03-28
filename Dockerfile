@@ -4,7 +4,7 @@ ENV TZ=Asia/Jakarta
 ARG VARIANT
 
 RUN (export DEBIAN_FRONTEND=noninteractive \
-    && apt -qq update \
+    && apt -qq update --fix-missing \
     && apt -qq install -y software-properties-common \
     && add-apt-repository ppa:apt-fast/stable \
     && apt-fast -qq install -y \
