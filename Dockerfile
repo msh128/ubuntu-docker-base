@@ -5,7 +5,7 @@ ARG VARIANT
 
 RUN (export DEBIAN_FRONTEND=noninteractive \
     && apt -qq update \
-    && apt -qq install software-properties-common \
+    && apt -qq install -y software-properties-common \
     && add-apt-repository ppa:apt-fast/stable \
     && apt-fast -qq install -y \
       aria2 curl dbus-x11 ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
