@@ -16,13 +16,17 @@ RUN (apt -qq update \
       esac) > /dev/null 2>&1
 RUN pip install yt-dlp udocker > /dev/null 2>&1
 RUN (curl -s https://rclone.org/install.sh | bash) > /dev/null 2>&1
-RUN curl -sL -o /usr/local/bin/ttyd $(curl -s 'https://api.github.com/repos/tsl0922/ttyd/releases/latest' | jq -r '.assets[] | select(.name|contains("x86_64")).browser_download_url')
+RUN curl -sL -o /usr/local/bin/ttyd $(curl -s 'https://api.github.com/repos/tsl0922/ttyd/releases/latest' | jq -r '.assets[] | select(.name|contains("x86_64")).browser_download_url') \
+    && chmod a+x /usr/local/bin/ttyd
 RUN mkdir -p /opt/teldrive \
     && curl -sL $(curl -s 'https://api.github.com/repos/divyam234/teldrive/releases/latest' | jq -r '.assets[] | select(.name|contains("linux-amd64")).browser_download_url') | tar xz -C /opt/teldrive teldrive && curl -sLO $(curl -s 'https://api.github.com/repos/divyam234/rclone/releases/latest' | jq -r '.assets[] | select(.name|contains("linux-amd64.zip")).browser_download_url') \
+    && chmod a+x /opt/teldrive/teldrive \
     && unzip -qq rclone-*.zip \
     && mv rclone-*/rclone* /opt/teldrive/ \
+    && chmod a+x /opt/teldrive/rclone \
     && rm -rf rclone-*
-RUN curl -sL 'https://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64' | tar xz -C /opt
+RUN curl -sL 'https://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64' | tar xz -C /opt \
+    && chmod a+x /opt/Prowlarr/Prowlarr
 RUN aria2c -q -c 'https://download.mozilla.org/?product=firefox-esr-latest-ssl&os=linux64&lang=en-US' \
     && tar xjf firefox-*.tar.bz2 -C /opt \
     && ln -s /opt/firefox/firefox /usr/local/bin/firefox \
@@ -35,8 +39,9 @@ RUN cp -rf /usr/bin/systemctl3.py /usr/bin/systemctl; cp -rf /usr/bin/journalctl
 RUN (adduser --disabled-password --gecos '' ubuntu \
     && adduser ubuntu sudo \
     && echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers) > /dev/null 2>&1
-RUN chmod a+x /usr/local/bin/ttyd /opt/teldrive/teldrive /opt/teldrive/rclone /opt/Prowlarr/Prowlarr
-RUN su - ubuntu -c 'udocker pull xhofe/alist:latest && udocker create --name=alist xhofe/alist:latest; udocker pull dpage/pgadmin4:latest && udocker create --name=pgadmin4 dpage/pgadmin4:latest' > /dev/null 2>&1
+RUN su - ubuntu -c 'mkdir -p /home/ubuntu/{Desktop,Documents,Music,Pictures,Videos,Downloads}; \
+    udocker pull xhofe/alist:latest; udocker create --name=alist xhofe/alist:latest; \
+    udocker pull dpage/pgadmin4:latest; udocker create --name=pgadmin4 dpage/pgadmin4:latest' > /dev/null 2>&1
 RUN (for a in autoremove purge clean; do apt -qq $a; done \
     && rm -rf /var/lib/apt/lists/*) > /dev/null 2>&1
 
