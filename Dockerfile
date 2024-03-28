@@ -8,7 +8,7 @@ RUN (export DEBIAN_FRONTEND=noninteractive \
     && apt -qq install -y software-properties-common \
     && add-apt-repository ppa:apt-fast/stable \
     && apt-fast -qq install -y \
-      aria2 curl dbus-x11 ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
+      aria2 curl dbus-x11 ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools libdbus-glib-1-2 mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
       parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo sqlite3 tigervnc-standalone-server tigervnc-xorg-extension \
       tmux tzdata unzip xfce4-terminal xserver-xorg-video-dummy \
     && apt-fast -qq full-upgrade -y \
@@ -46,6 +46,7 @@ RUN su - ubuntu -c 'mkdir -p /home/ubuntu/{Desktop,Documents,Music,Pictures,Vide
     udocker pull xhofe/alist:latest; udocker create --name=alist xhofe/alist:latest; \
     udocker pull dpage/pgadmin4:latest; udocker create --name=pgadmin4 dpage/pgadmin4:latest' > /dev/null 2>&1
 RUN (for a in autoremove purge clean; do apt -qq $a; done \
-    && rm -rf /var/lib/apt/lists/*) > /dev/null 2>&1
+    && rm -rf /var/lib/apt/lists/* \
+    && echo ${VARIANT} > /tmp/desktop_environment) > /dev/null 2>&1
 
 CMD ["/sbin/init"]
