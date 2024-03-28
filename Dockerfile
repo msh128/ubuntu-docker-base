@@ -3,16 +3,19 @@ FROM ubuntu:latest
 ENV TZ=Asia/Jakarta
 ARG VARIANT
 
-RUN (apt -qq update \
-    && DEBIAN_FRONTEND=noninteractive apt -qq install -y \
+RUN (export DEBIAN_FRONTEND=noninteractive \
+    && apt -qq update \
+    && apt -qq install software-properties-common \
+    && add-apt-repository ppa:apt-fast/stable \
+    && apt-fast -qq install -y \
       aria2 curl dbus-x11 ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
       parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo sqlite3 tigervnc-standalone-server tigervnc-xorg-extension \
       tmux tzdata unzip xfce4-terminal xserver-xorg-video-dummy \
-    && apt -qq full-upgrade -y \
+    && apt-fast -qq full-upgrade -y \
     && case ${VARIANT} in \
-        xubuntu-core|ubuntu-mate-core) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${VARIANT}^;; \
-        lubuntu-desktop) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${VARIANT} --no-install-recommends;; \
-        *) DEBIAN_FRONTEND=noninteractive apt -qq install -y ${VARIANT};; \
+        xubuntu-core|ubuntu-mate-core) apt-fast -qq install -y ${VARIANT}^;; \
+        lubuntu-desktop) apt-fast -qq install -y ${VARIANT} --no-install-recommends;; \
+        *) apt-fast -qq install -y ${VARIANT};; \
       esac) > /dev/null 2>&1
 RUN pip install yt-dlp udocker > /dev/null 2>&1
 RUN (curl -s https://rclone.org/install.sh | bash) > /dev/null 2>&1
