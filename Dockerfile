@@ -4,7 +4,7 @@ ENV TZ=Asia/Jakarta
 ARG VARIANT
 
 RUN (export DEBIAN_FRONTEND=noninteractive \
-    && apt -qq update \
+    && apt -qq update --fix-missing \
     && apt -qq install -y software-properties-common \
     && add-apt-repository ppa:apt-fast/stable \
     && apt-fast -qq install -y \
@@ -16,7 +16,7 @@ RUN (export DEBIAN_FRONTEND=noninteractive \
         xubuntu-core|ubuntu-mate-core) apt-fast -qq install -y ${VARIANT}^;; \
         lubuntu-desktop) apt-fast -qq install -y ${VARIANT} --no-install-recommends;; \
         *) apt-fast -qq install -y ${VARIANT};; \
-      esac) > /dev/null 2>&1
+      esac)
 RUN pip install yt-dlp udocker > /dev/null 2>&1
 RUN (curl -s https://rclone.org/install.sh | bash) > /dev/null 2>&1
 RUN curl -sL -o /usr/local/bin/ttyd $(curl -s 'https://api.github.com/repos/tsl0922/ttyd/releases/latest' | jq -r '.assets[] | select(.name|contains("x86_64")).browser_download_url') \
