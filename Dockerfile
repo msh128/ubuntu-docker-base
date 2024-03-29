@@ -33,8 +33,9 @@ RUN mkdir -p /opt/teldrive \
 RUN curl -sL 'https://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64' | tar xz -C /opt \
     && chmod a+x /opt/Prowlarr/Prowlarr
 RUN curl -fsSL 'https://alist.nn.ci/v3.sh' | bash -s install > /dev/null 2>&1 \
-    && mkdir -p /opt/alist/data \
-    && chown ubuntu:ubuntu -R /opt/alist
+    && mkdir -p /opt/alist/data
+RUN mkdir -p /var/lib/pgadmin /var/log/pgadmin \
+    && pip install pgadmin4 > /dev/null 2>&1
 RUN curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash > /dev/null 2>&1
 RUN aria2c -q -c 'https://download.mozilla.org/?product=firefox-esr-latest-ssl&os=linux64&lang=en-US' \
     && tar xjf firefox-*.tar.bz2 -C /opt \
@@ -49,9 +50,7 @@ RUN (adduser --disabled-password --gecos '' ubuntu \
     && echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers) > /dev/null 2>&1
 RUN su - ubuntu -c 'mkdir -p /home/ubuntu/{Desktop,Documents,Music,Pictures,Videos,Downloads}; \
     echo '${VARIANT}' > /home/ubuntu/.desktop_environment' > /dev/null 2>&1
-RUN mkdir -p /var/lib/pgadmin /var/log/pgadmin \
-    && pip install pgadmin4 > /dev/null 2>&1 \
-    && chown ubuntu:ubuntu -R /var/lib/pgadmin /var/log/pgadmin
+RUN chown ubuntu:ubuntu -R /var/lib/pgadmin /var/log/pgadmin /opt/alist
 RUN (for a in autoremove purge clean; do apt -qq $a; done \
     && rm -rf /var/lib/apt/lists/*) > /dev/null 2>&1
 
