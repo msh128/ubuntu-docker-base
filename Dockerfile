@@ -45,7 +45,8 @@ RUN (adduser --disabled-password --gecos '' ubuntu \
     && echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers) > /dev/null 2>&1
 RUN su - ubuntu -c 'mkdir -p /home/ubuntu/{Desktop,Documents,Music,Pictures,Videos,Downloads}; \
     udocker pull xhofe/alist:latest; udocker create --name=alist xhofe/alist:latest; \
-    udocker pull dpage/pgadmin4:latest; udocker create --name=pgadmin4 dpage/pgadmin4:latest' > /dev/null 2>&1
+    udocker pull dpage/pgadmin4:latest; udocker create --name=pgadmin4 dpage/pgadmin4:latest; \
+    echo ${VARIANT} > /home/ubuntu/.desktop_environment' > /dev/null 2>&1
 RUN (for a in autoremove purge clean; do apt -qq $a; done \
     && rm -rf /var/lib/apt/lists/* \
     && echo ${VARIANT} > /tmp/desktop_environment) > /dev/null 2>&1
