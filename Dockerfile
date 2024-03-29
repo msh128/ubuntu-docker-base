@@ -18,6 +18,7 @@ RUN (export DEBIAN_FRONTEND=noninteractive \
         lubuntu-desktop) apt-fast -qq install -y ${VARIANT} --no-install-recommends;; \
         *) apt-fast -qq install -y ${VARIANT};; \
       esac) > /dev/null 2>&1
+RUN sed -i 's/tigervncconfig -iconic/#tigervncconfig -iconic/g' /etc/X11/Xtigervnc-session
 RUN pip install yt-dlp udocker > /dev/null 2>&1
 RUN (curl -s https://rclone.org/install.sh | bash) > /dev/null 2>&1
 RUN curl -sL -o /usr/local/bin/ttyd $(curl -s 'https://api.github.com/repos/tsl0922/ttyd/releases/latest' | jq -r '.assets[] | select(.name|contains("x86_64")).browser_download_url') \
@@ -36,7 +37,6 @@ RUN aria2c -q -c 'https://download.mozilla.org/?product=firefox-esr-latest-ssl&o
     && ln -s /opt/firefox/firefox /usr/local/bin/firefox \
     && rm firefox-*.tar.bz2 \
     && wget -q https://raw.githubusercontent.com/mozilla/sumo-kb/main/install-firefox-linux/firefox.desktop -P /usr/local/share/applications
-RUN sed -i 's/tigervncconfig -iconic/#tigervncconfig -iconic/g' /etc/X11/Xtigervnc-session
 ADD --chmod=755 https://github.com/gdraheim/docker-systemctl-replacement/raw/master/files/docker/systemctl3.py /usr/bin/systemctl3.py
 ADD --chmod=755 https://github.com/gdraheim/docker-systemctl-replacement/raw/master/files/docker/journalctl3.py /usr/bin/journalctl3.py
 RUN cp -rf /usr/bin/systemctl3.py /usr/bin/systemctl; cp -rf /usr/bin/journalctl3.py /usr/bin/journalctl; chmod a+x /usr/bin/systemctl* /usr/bin/journalctl*
@@ -44,9 +44,13 @@ RUN (adduser --disabled-password --gecos '' ubuntu \
     && adduser ubuntu sudo \
     && echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers) > /dev/null 2>&1
 RUN su - ubuntu -c 'mkdir -p /home/ubuntu/{Desktop,Documents,Music,Pictures,Videos,Downloads}; \
-    udocker pull xhofe/alist:latest; udocker create --name=alist xhofe/alist:latest; \
-    udocker pull dpage/pgadmin4:latest; udocker create --name=pgadmin4 dpage/pgadmin4:latest; \
     echo '${VARIANT}' > /home/ubuntu/.desktop_environment' > /dev/null 2>&1
+RUN mkdir -p /var/lib/pgadmin /var/log/pgadmin \
+    && pip install pgadmin4 \
+    && chown ubuntu:ubuntu -R /var/lib/pgadmin /var/log/pgadmin
+RUN curl -fsSL "https://alist.nn.ci/v3.sh" | bash -s install \
+    && mkdir -p /opt/alist/data \
+    && chown ubuntu:ubuntu -R /opt/alist
 RUN (for a in autoremove purge clean; do apt -qq $a; done \
     && rm -rf /var/lib/apt/lists/*) > /dev/null 2>&1
 
