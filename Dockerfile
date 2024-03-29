@@ -11,7 +11,7 @@ RUN (export DEBIAN_FRONTEND=noninteractive \
     && apt-fast -qq install -y \
       aria2 curl dbus-x11 ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools libdbus-glib-1-2 mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
       parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo sqlite3 tigervnc-standalone-server tigervnc-xorg-extension \
-      tmux tzdata unzip xfce4-terminal xserver-xorg-video-dummy \
+      tmux tzdata ubuntu-wallpapers unzip xfce4-terminal xserver-xorg-video-dummy \
     && apt-fast -qq full-upgrade -y \
     && case ${VARIANT} in \
         xubuntu-core|ubuntu-mate-core) apt-fast -qq install -y ${VARIANT}^;; \
