@@ -19,7 +19,6 @@ RUN (export DEBIAN_FRONTEND=noninteractive \
         *) apt-fast -qq install -y ${VARIANT};; \
       esac) > /dev/null 2>&1
 RUN sed -i 's/tigervncconfig -iconic/#tigervncconfig -iconic/g' /etc/X11/Xtigervnc-session
-RUN pip install yt-dlp udocker > /dev/null 2>&1
 RUN (curl -s https://rclone.org/install.sh | bash) > /dev/null 2>&1
 RUN curl -sL -o /usr/local/bin/ttyd $(curl -s 'https://api.github.com/repos/tsl0922/ttyd/releases/latest' | jq -r '.assets[] | select(.name|contains("x86_64")).browser_download_url') \
     && chmod a+x /usr/local/bin/ttyd
@@ -36,7 +35,7 @@ RUN curl -sL 'https://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&
 RUN curl -fsSL 'https://alist.nn.ci/v3.sh' | bash -s install > /dev/null 2>&1 \
     && mkdir -p /opt/alist/data
 RUN mkdir -p /var/lib/pgadmin /var/log/pgadmin \
-    && pip install pgadmin4 > /dev/null 2>&1
+    && pip install pgadmin4 yt-dlp > /dev/null 2>&1
 RUN curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash > /dev/null 2>&1
 RUN aria2c -q -c 'https://download.mozilla.org/?product=firefox-esr-latest-ssl&os=linux64&lang=en-US' \
     && tar xjf firefox-*.tar.bz2 -C /opt \
