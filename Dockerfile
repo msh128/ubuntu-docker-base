@@ -10,7 +10,7 @@ RUN (export DEBIAN_FRONTEND=noninteractive \
     && apt -qq install -y apt-fast \
     && apt-fast -qq install -y \
       aria2 curl dbus-x11 ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools libdbus-glib-1-2 mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
-      parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo sqlite3 tigervnc-standalone-server tigervnc-xorg-extension \
+      parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo speedtest-cli sqlite3 tigervnc-standalone-server tigervnc-xorg-extension \
       tmux tzdata ubuntu-wallpapers unzip xfce4-terminal xserver-xorg-video-dummy \
     && apt-fast -qq full-upgrade -y \
     && case ${VARIANT} in \
@@ -24,7 +24,8 @@ RUN (curl -s https://rclone.org/install.sh | bash) > /dev/null 2>&1
 RUN curl -sL -o /usr/local/bin/ttyd $(curl -s 'https://api.github.com/repos/tsl0922/ttyd/releases/latest' | jq -r '.assets[] | select(.name|contains("x86_64")).browser_download_url') \
     && chmod a+x /usr/local/bin/ttyd
 RUN mkdir -p /opt/teldrive \
-    && curl -sL $(curl -s 'https://api.github.com/repos/divyam234/teldrive/releases/latest' | jq -r '.assets[] | select(.name|contains("linux-amd64")).browser_download_url') | tar xz -C /opt/teldrive teldrive && curl -sLO $(curl -s 'https://api.github.com/repos/divyam234/rclone/releases/latest' | jq -r '.assets[] | select(.name|contains("linux-amd64.zip")).browser_download_url') \
+    && curl -sL $(curl -s 'https://api.github.com/repos/divyam234/teldrive/releases/latest' | jq -r '.assets[] | select(.name|contains("linux-amd64")).browser_download_url') | tar xz -C /opt/teldrive teldrive \
+    && curl -sLO $(curl -s 'https://api.github.com/repos/divyam234/rclone/releases/latest' | jq -r '.assets[] | select(.name|contains("linux-amd64.zip")).browser_download_url') \
     && chmod a+x /opt/teldrive/teldrive \
     && unzip -qq rclone-*.zip \
     && mv rclone-*/rclone* /opt/teldrive/ \
