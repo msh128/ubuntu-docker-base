@@ -5,9 +5,6 @@ ARG VARIANT
 
 RUN (export DEBIAN_FRONTEND=noninteractive \
     && apt -qq update --fix-missing \
-    && apt -qq install -y software-properties-common \
-    && add-apt-repository ppa:apt-fast/stable \
-    && apt -qq install -y apt-fast \
     && apt-fast -qq install -y \
       aria2 curl dbus-x11 ffmpeg fuse3 htop inotify-tools jq less libchromaprint-tools libdbus-glib-1-2 mediainfo mkvtoolnix nano ncdu novnc openssh-client openssh-server \
       parallel postgresql-client python3-pip python3-websockify qbittorrent-nox rename sudo speedtest-cli sqlite3 tigervnc-standalone-server tigervnc-xorg-extension \
