@@ -31,7 +31,8 @@ RUN mkdir -p /var/lib/pgadmin /var/log/pgadmin \
 RUN curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
 RUN curl -sLO https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb \
     && dpkg -i cloudflared-linux-amd64.deb \
-    && apt install -f
+    && apt install -f \
+    && rm cloudflared-linux-amd64.deb
 RUN aria2c -q -c 'https://download.mozilla.org/?product=firefox-esr-latest-ssl&os=linux64&lang=en-US' \
     && tar xjf firefox-*.tar.bz2 -C /opt \
     && ln -s /opt/firefox/firefox /usr/local/bin/firefox \
